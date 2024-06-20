@@ -6,7 +6,7 @@
 
 using namespace std;
 
-void lerVetor(float vetor[], int tamanho) {
+void lerVetor(double vetor[], int tamanho) {
     cout << endl;
     for(int i=0;i<tamanho;i++) {
         cout <<"vetor("<<i<<"): ";
@@ -14,7 +14,7 @@ void lerVetor(float vetor[], int tamanho) {
     }
 }
 
-void imprimir_mat(float mat[][maxT], int ordem){
+void imprimir_mat(double mat[][maxT], int ordem){
     cout << endl;
     for(int i=0;i<ordem;i++){
         for(int j=0;j<ordem;j++){
@@ -24,7 +24,7 @@ void imprimir_mat(float mat[][maxT], int ordem){
     }
 }
 
-float determinante_metodo_gauus(float mat[][maxT], int ordem){
+double determinante_metodo_gauus(double mat[][maxT], int ordem){
 
     cout << endl;
     for(int i=0;i<ordem;i++){
@@ -38,17 +38,27 @@ float determinante_metodo_gauus(float mat[][maxT], int ordem){
     }
 
 
-    float submat[maxT][maxT];
+    double submat[maxT][maxT];
     int i, j, k;
-    float pivote1, pivote2;
-    float det, aux;
+    double pivote1, pivote2;
+    double det, aux;
     for(i=0;i<ordem;i++){
         for(j=0;j<ordem;j++){
             submat[i][j] = mat[i][j];
+
         }
     }
+    double auxV[ordem];
     for(i=0; i<ordem;i++){
         pivote1 = submat[i][i];
+        if(pivote1 == 0){
+            for(int j=0;j<ordem;j++){
+                auxV[j] = submat[i][j];
+                submat[i][j] = submat[i+1][j];
+                submat[i+1][j] = auxV[j];
+            }
+            pivote1 = submat[i][i];
+        }
         for(j=i+1;j<ordem;j++){
             pivote2 = submat[j][i];
             aux = pivote2/pivote1;
@@ -81,16 +91,16 @@ float determinante_metodo_gauus(float mat[][maxT], int ordem){
     return det;
 }
 
-void calculaCombinacaoLinear(float matI[][maxT], float vetR[], int ordem, float solucao[]){
-    float subMat[maxT][maxT];
+void calculaCombinacaoLinear(double matI[][maxT], double vetR[], int ordem, double solucao[]){
+    double subMat[maxT][maxT];
     for(int j=0;j<ordem;j++){
         for(int k=0;k<ordem;k++){
                 subMat[k][j] = matI[j][k];
         }
     }
-    float detMI = determinante_metodo_gauus(subMat,ordem);
+    double detMI = determinante_metodo_gauus(subMat,ordem);
     for(int i= 0; i<ordem;i++){
-        float mtAux[maxT][maxT];
+        double mtAux[maxT][maxT];
         for(int j=0;j<ordem;j++){
             for(int k=0;k<ordem;k++){
                     mtAux[k][j] = matI[j][k];
@@ -99,7 +109,7 @@ void calculaCombinacaoLinear(float matI[][maxT], float vetR[], int ordem, float 
         for(int j=0;j<ordem;j++){
             mtAux[j][i] = vetR[j];
         }
-        float detL = determinante_metodo_gauus(mtAux,ordem);
+        double detL = determinante_metodo_gauus(mtAux,ordem);
 
         solucao[i] = detL/detMI ;
     }
@@ -111,7 +121,7 @@ int main(){
 
     int tamanho = 0;
 
-    float mat[maxT][maxT];
+    double mat[maxT][maxT];
 
     do {
 
@@ -125,13 +135,13 @@ int main(){
             lerVetor(mat[i], tamanho);
         }
 
-        float det = determinante_metodo_gauus(mat, tamanho);
+        double det = determinante_metodo_gauus(mat, tamanho);
 
         if(det != 0){
-            float vetLI[tamanho];
+            double vetLI[tamanho];
             cout << "\nLeitura do vetor linear";
             lerVetor(vetLI,tamanho);
-            float solucao[tamanho];
+            double solucao[tamanho];
             calculaCombinacaoLinear(mat, vetLI, tamanho, solucao);
             cout << "\nSolucao: (";
             for(int i=0;i<tamanho;i++){
